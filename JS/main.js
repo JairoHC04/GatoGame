@@ -33,7 +33,7 @@ function verificarGanador() {
                 }
             });
             document.getElementById('start').textContent = 'Otra Vez';
-
+            todasCeldasUsadas = true;
             return;
         }
 
@@ -118,28 +118,44 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function movimientoPC(pcSymbol, playerSymbol) {
-    let mejorPuntaje = -Infinity;
-    let mejorMovimiento;
+    // Mostrar mensaje "Pensando..."
+    Swal.fire({
+        title: 'Pensando...',
+        position: "top-end",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        timer:500
+    }).then(()=>{
+        let mejorPuntaje = -Infinity;
+        let mejorMovimiento;
 
-    document.querySelectorAll('td').forEach(celda => {
-        if (!celda.hasAttribute('used')) {
-            celda.setAttribute('used', pcSymbol);
-            let puntaje = minimax(pcSymbol, playerSymbol, false);
-            celda.removeAttribute('used');
+        document.querySelectorAll('td').forEach(celda => {
+            if (!celda.hasAttribute('used')) {
+                celda.setAttribute('used', pcSymbol);
+                let puntaje = minimax(pcSymbol, playerSymbol, false);
+                celda.removeAttribute('used');
 
-            if (puntaje > mejorPuntaje) {
-                mejorPuntaje = puntaje;
-                mejorMovimiento = celda;
+                if (puntaje > mejorPuntaje) {
+                    mejorPuntaje = puntaje;
+                    mejorMovimiento = celda;
+                }
             }
-        }
-    });
+        });
 
-    if (mejorMovimiento) {
-        mejorMovimiento.setAttribute('used', pcSymbol);
-        mejorMovimiento.innerHTML = pcSymbol === 'x' ? '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-circle"></i>';
-        verificarGanador(pcSymbol);
-    }
+        if (mejorMovimiento) {
+            mejorMovimiento.setAttribute('used', pcSymbol);
+            mejorMovimiento.innerHTML = pcSymbol === 'x' ? '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-circle"></i>';
+            verificarGanador(pcSymbol);
+        }
+        }
+    );
+
+
+
+
 }
+
 
 function minimax(pcSymbol, playerSymbol, esTurnoPC) {
     if (verificarResultado()) {
@@ -185,8 +201,19 @@ function iniciarJuegoSolo(playerSymbol) {
         Swal.fire({
             title: `La PC empieza. Es ${pcSymbol === 'x' ? '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-circle"></i>'}`
         }).then(() => {
-            movimientoPC(pcSymbol, playerSymbol);
-            start = playerSymbol;
+            Swal.fire({
+                title: 'Pensando...',
+                position: "top-end",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                timer:500
+            }).then(()=>{
+                movimientoPC(pcSymbol, playerSymbol);
+                start = playerSymbol;
+                }
+            );
+
         });
     }
 
