@@ -25,8 +25,15 @@ function verificarGanador() {
             Swal.fire({
                 title: `Ganador: ${(celdaA === 'x') ? '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-circle"></i>'}`,
                 icon: 'success'
+            }).then((confirm) => {
+                if (confirm.isConfirmed) {
+                    setTimeout(LimpiarCampos, 1000);
+                } else {
+                    setTimeout(LimpiarCampos, 1000);
+                }
             });
             document.getElementById('start').textContent = 'Otra Vez';
+
             return;
         }
 
